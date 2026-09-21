@@ -1,0 +1,1978 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projek IPAS - Pengukuran & Metode Ilmiah | SMK Waliwa Laimu</title>
+    <style>
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-sidebar: #0f172a;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --accent-primary: #2563eb;
+            --accent-hover: #1d4ed8;
+            --accent-secondary: #0d9488;
+            --accent-warning: #f59e0b;
+            --accent-danger: #ef4444;
+            --accent-success: #10b981;
+            --border-color: #e2e8f0;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+        }
+
+        .dark {
+            --bg-primary: #0f172a;
+            --bg-card: #1e293b;
+            --bg-sidebar: #020617;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --accent-primary: #3b82f6;
+            --accent-hover: #60a5fa;
+            --accent-secondary: #14b8a6;
+            --border-color: #334155;
+            --card-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Navigation */
+        #sidebar {
+            width: 280px;
+            background-color: var(--bg-sidebar);
+            color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-right: 1px solid var(--border-color);
+        }
+
+        .sidebar-header {
+            padding: 20px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-brand-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #38bdf8;
+            line-height: 1.2;
+        }
+
+        .sidebar-brand-sub {
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        .nav-list {
+            list-style: none;
+            padding: 12px 8px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .nav-item {
+            margin-bottom: 4px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            color: #cbd5e1;
+            text-decoration: none;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+        }
+
+        .nav-link.active {
+            background-color: var(--accent-primary);
+            color: #ffffff;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .nav-link svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        /* Main Content Layout */
+        #main-wrapper {
+            margin-left: 280px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .top-navbar {
+            height: 64px;
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 900;
+        }
+
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            border-radius: var(--radius-sm);
+        }
+
+        .toggle-btn:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .student-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.875rem;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--accent-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Content Area */
+        .content-container {
+            padding: 28px;
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background-color: var(--border-color);
+            border-radius: 20px;
+            height: 10px;
+            width: 100%;
+            overflow: hidden;
+            margin: 16px 0 24px 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        /* UI Components */
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+            transition: transform 0.1s ease, box-shadow 0.2s ease, background-color 0.2s;
+            text-decoration: none;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background-color: var(--accent-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background-color: var(--accent-secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            opacity: 0.9;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-danger {
+            background-color: var(--accent-danger);
+            color: white;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background-color: rgba(37, 99, 235, 0.1);
+            color: var(--accent-primary);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+
+        /* Tables */
+        .table-responsive {
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: rgba(0, 0, 0, 0.03);
+            font-weight: 700;
+        }
+
+        .dark th {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Modals */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        .modal-backdrop.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-md);
+            max-width: 500px;
+            width: 90%;
+            padding: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Interactive Simulators */
+        .sim-container {
+            background: #111827;
+            color: #38bdf8;
+            padding: 20px;
+            border-radius: var(--radius-md);
+            text-align: center;
+            margin: 16px 0;
+        }
+
+        /* Responsive Mobile Styles */
+        @media (max-width: 900px) {
+            #sidebar {
+                transform: translateX(-100%);
+            }
+
+            #sidebar.open {
+                transform: translateX(0);
+            }
+
+            #main-wrapper {
+                margin-left: 0;
+            }
+        }
+
+        /* Print Media Styles */
+        @media print {
+            #sidebar, .top-navbar, .btn-group, .no-print {
+                display: none !important;
+            }
+            #main-wrapper {
+                margin-left: 0 !important;
+            }
+            body {
+                background: white !important;
+                color: black !important;
+            }
+            .card {
+                border: 1px solid #ccc !important;
+                box-shadow: none !important;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR NAVIGATION -->
+    <aside id="sidebar">
+        <div class="sidebar-header">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+                <path d="M10 2v7.586l-5.293 5.293A2 2 0 0 0 4 16.293V20a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3.707a2 2 0 0 0-.586-1.414L14 9.586V2"/>
+                <path d="M8.5 2h7"/>
+                <path d="M14 9.5a2.5 2.5 0 1 1-5 0"/>
+            </svg>
+            <div>
+                <div class="sidebar-brand-title">Projek IPAS</div>
+                <div class="sidebar-brand-sub">SMK Waliwa Laimu</div>
+            </div>
+        </div>
+
+        <ul class="nav-list">
+            <li class="nav-item">
+                <button class="nav-link active" onclick="switchTab('beranda')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    <span>🏠 BERANDA</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" onclick="switchTab('profil')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <span>👤 PROFIL</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" onclick="switchTab('pemantik')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                    <span>💡 PERTANYAAN PEMANTIK</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" onclick="switchTab('tujuan')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                    <span>🎯 TUJUAN PEMBELAJARAN</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" onclick="switchTab('materi')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+                    <span>📚 MATERI PEMBELAJARAN</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" onclick="switchTab('lkpd')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+                    <span>📋 LKPD TERPADU</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" onclick="switchTab('proyek')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.586l-5.293 5.293A2 2 0 0 0 4 16.293V20a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3.707a2 2 0 0 0-.586-1.414L14 9.586V2"/></svg>
+                    <span>🧪 PROYEK MINI</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" onclick="switchTab('asesmen')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    <span>📝 ASESMEN</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" onclick="switchTab('refleksi')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    <span>💭 REFLEKSI</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" onclick="switchTab('hasil')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
+                    <span>🏆 HASIL BELAJAR</span>
+                </button>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- MAIN CONTENT WRAPPER -->
+    <div id="main-wrapper">
+        <!-- TOP NAVBAR -->
+        <header class="top-navbar">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <button class="toggle-btn" onclick="toggleSidebar()" aria-label="Toggle Sidebar">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                </button>
+                <span id="current-title" style="font-weight: 700; font-size: 1.1rem; color: var(--accent-primary);">Beranda Utama</span>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <button class="toggle-btn" onclick="toggleAudio()" id="audio-btn" title="Suara Feedback">
+                    <svg id="audio-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                </button>
+                <button class="toggle-btn" onclick="toggleTheme()" title="Mode Gelap/Terang">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                </button>
+                <div class="student-status">
+                    <div class="user-avatar" id="avatar-display">S</div>
+                    <div>
+                        <div id="top-student-name" style="font-weight: 600;">Siswa Baru</div>
+                        <div id="top-student-class" style="font-size: 0.75rem; color: var(--text-muted);">Kelas X SMK</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- CONTENT AREA -->
+        <main class="content-container">
+            <div class="progress-container" title="Progres Belajar Anda">
+                <div class="progress-bar" id="global-progress"></div>
+            </div>
+
+            <!-- 1. BERANDA SECTION -->
+            <section id="sec-beranda" class="page-section active">
+                <div class="card" style="text-align: center; padding: 40px 20px; background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(13,148,136,0.08));">
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.5" style="margin-bottom: 16px;">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>
+                        <path d="M2 12h20"/>
+                    </svg>
+                    <h1 style="font-size: 2rem; color: var(--accent-primary); margin-bottom: 12px;">PROJEK IPAS KELAS X SMK</h1>
+                    <h2 style="font-size: 1.25rem; font-weight: 600; color: var(--text-muted); margin-bottom: 20px;">“PENGUKURAN DAN METODE ILMIAH”</h2>
+                    <p style="max-width: 650px; margin: 0 auto 24px auto; line-height: 1.6; font-size: 1rem;">
+                        Selamat datang di aplikasi pembelajaran interaktif Projek IPAS. Modul ini dirancang khusus untuk siswa Kelas X SMK Waliwa Laimu agar dapat menguasai keterampilan pengukuran presisi dan metode ilmiah yang sangat penting dalam dunia kerja dan kejuruan.
+                    </p>
+                    <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+                        <button class="btn btn-primary" onclick="switchTab('profil')">
+                            Lengkapi Profil Siswa
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        </button>
+                        <button class="btn btn-secondary" onclick="switchTab('pemantik')">
+                            Mulai Pembelajaran
+                        </button>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                    <div class="card">
+                        <h3 class="card-title">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                            Identitas Sekolah
+                        </h3>
+                        <p style="margin-top: 8px;"><strong>Sekolah:</strong> SMK Waliwa Laimu</p>
+                        <p style="margin-top: 4px;"><strong>Mata Pelajaran:</strong> Projek IPAS</p>
+                        <p style="margin-top: 4px;"><strong>Guru Pengampu:</strong> Muh. Kasim Wattimena, S.Pd</p>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            Fitur Pembelajaran
+                        </h3>
+                        <ul style="padding-left: 20px; line-height: 1.6; margin-top: 8px; font-size: 0.9rem;">
+                            <li>Simulator Pembacaan Alat Ukur Interaktif</li>
+                            <li>Lembar Kerja Peserta Didik (LKPD) Digital</li>
+                            <li>Latihan Soal & Asesmen Terintegrasi</li>
+                            <li>100% Bebas Akses Tanpa Internet (Offline)</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. PROFIL SECTION -->
+            <section id="sec-profil" class="page-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            Profil Pembelajaran & Peserta Didik
+                        </h2>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+                        <div>
+                            <h3 style="font-size: 1rem; color: var(--accent-secondary); margin-bottom: 12px;">Profil Guru & Sekolah</h3>
+                            <div style="background-color: var(--bg-primary); padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                                <p><strong>Nama Guru:</strong> Muh. Kasim Wattimena, S.Pd</p>
+                                <p style="margin-top: 6px;"><strong>Instansi:</strong> SMK Waliwa Laimu</p>
+                                <p style="margin-top: 6px;"><strong>Mata Pelajaran:</strong> Projek IPAS</p>
+                                <p style="margin-top: 6px;"><strong>Kelas:</strong> X SMK</p>
+                                <p style="margin-top: 6px;"><strong>Materi Utama:</strong> Pengukuran dan Metode Ilmiah</p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 style="font-size: 1rem; color: var(--accent-primary); margin-bottom: 12px;">Data Peserta Didik</h3>
+                            <form id="profile-form" onsubmit="saveStudentProfile(event)">
+                                <div class="form-group">
+                                    <label class="form-label" for="inp-nama">Nama Lengkap Peserta Didik *</label>
+                                    <input type="text" id="inp-nama" class="form-control" placeholder="Masukkan nama lengkap..." required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="inp-kelas">Kelas / Program Keahlian *</label>
+                                    <select id="inp-kelas" class="form-control" required>
+                                        <option value="" disabled selected>-- Pilih Kelas / Program Keahlian --</option>
+                                        <option value="X. NKPI">X. NKPI</option>
+                                        <option value="X. ABPAL">X. ABPAL</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="inp-no">Nomor Peserta / NIS *</label>
+                                    <input type="text" id="inp-no" class="form-control" placeholder="Masukkan nomor peserta..." required>
+                                </div>
+                                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                                    Simpan Profil & Lanjutkan Pembelajaran
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. PERTANYAAN PEMANTIK SECTION -->
+            <section id="sec-pemantik" class="page-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                            Pertanyaan Pemantik
+                        </h2>
+                        <span class="badge">Kehidupan & Dunia Kerja</span>
+                    </div>
+                    <p style="margin-bottom: 20px; line-height: 1.6;">
+                        Sebelum melangkah lebih jauh ke dalam materi IPAS, mari renungkan pertanyaan-pertanyaan mendasar yang sering kita jumpai dalam kehidupan sehari-hari maupun dunia industri kejuruan:
+                    </p>
+
+                    <div id="pemantik-list" style="display: flex; flex-direction: column; gap: 14px;">
+                        <!-- Questions will be rendered dynamically -->
+                    </div>
+
+                    <div class="btn-group" style="justify-content: flex-end; margin-top: 28px;">
+                        <button class="btn btn-primary" onclick="switchTab('tujuan')">
+                            LANJUT KE TUJUAN PEMBELAJARAN
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. TUJUAN PEMBELAJARAN SECTION -->
+            <section id="sec-tujuan" class="page-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                            Tujuan Pembelajaran Projek IPAS
+                        </h2>
+                    </div>
+                    <p style="margin-bottom: 20px;">
+                        Setelah menyelesaikan seluruh aktivitas pembelajaran ini, peserta didik kelas X SMK diharapkan mampu menguasai 8 capaian berikut:
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px;">
+                        <div class="card" style="margin: 0; background-color: var(--bg-primary); border-left: 4px solid var(--accent-primary);">
+                            <span class="badge" style="margin-bottom: 8px;">Tujuan 1</span>
+                            <p style="font-size: 0.95rem; font-weight: 500;">Menjelaskan pengertian pengukuran dan pentingnya pengukuran dalam kehidupan sehari-hari serta dunia kerja.</p>
+                        </div>
+                        <div class="card" style="margin: 0; background-color: var(--bg-primary); border-left: 4px solid var(--accent-primary);">
+                            <span class="badge" style="margin-bottom: 8px;">Tujuan 2</span>
+                            <p style="font-size: 0.95rem; font-weight: 500;">Mengidentifikasi besaran pokok, besaran turunan, satuan SI, dan alat ukur yang sesuai.</p>
+                        </div>
+                        <div class="card" style="margin: 0; background-color: var(--bg-primary); border-left: 4px solid var(--accent-primary);">
+                            <span class="badge" style="margin-bottom: 8px;">Tujuan 3</span>
+                            <p style="font-size: 0.95rem; font-weight: 500;">Menggunakan berbagai alat ukur sederhana seperti mistar, meteran, jangka sorong, mikrometer sekrup, neraca, stopwatch, dan termometer.</p>
+                        </div>
+                        <div class="card" style="margin: 0; background-color: var(--bg-primary); border-left: 4px solid var(--accent-primary);">
+                            <span class="badge" style="margin-bottom: 8px;">Tujuan 4</span>
+                            <p style="font-size: 0.95rem; font-weight: 500;">Membaca hasil pengukuran dengan benar serta menuliskan hasil pengukuran menggunakan satuan baku.</p>
+                        </div>
+                        <div class="card" style="margin: 0; background-color: var(--bg-primary); border-left: 4px solid var(--accent-primary);">
+                            <span class="badge" style="margin-bottom: 8px;">Tujuan 5</span>
+                            <p style="font-size: 0.95rem; font-weight: 500;">Menjelaskan konsep ketelitian, ketepatan, kesalahan pengukuran, dan pentingnya pengukuran berulang.</p>
+                        </div>
+                        <div class="card" style="margin: 0; background-color: var(--bg-primary); border-left: 4px solid var(--accent-primary);">
+                            <span class="badge" style="margin-bottom: 8px;">Tujuan 6</span>
+                            <p style="font-size: 0.95rem; font-weight: 500;">Menjelaskan pengertian metode ilmiah dan tahapan-tahapannya secara terstruktur.</p>
+                        </div>
+                        <div class="card" style="margin: 0; background-color: var(--bg-primary); border-left: 4px solid var(--accent-primary);">
+                            <span class="badge" style="margin-bottom: 8px;">Tujuan 7</span>
+                            <p style="font-size: 0.95rem; font-weight: 500;">Menerapkan langkah-langkah metode ilmiah untuk menyelesaikan permasalahan sederhana di lingkungan kerja.</p>
+                        </div>
+                        <div class="card" style="margin: 0; background-color: var(--bg-primary); border-left: 4px solid var(--accent-primary);">
+                            <span class="badge" style="margin-bottom: 8px;">Tujuan 8</span>
+                            <p style="font-size: 0.95rem; font-weight: 500;">Menyusun laporan sederhana hasil pengamatan atau percobaan berdasarkan metode ilmiah.</p>
+                        </div>
+                    </div>
+
+                    <div class="btn-group" style="justify-content: flex-end; margin-top: 24px;">
+                        <button class="btn btn-primary" onclick="switchTab('materi')">
+                            MULAI BELAJAR MATERI 1
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. MATERI PEMBELAJARAN SECTION -->
+            <section id="sec-materi" class="page-section">
+                <!-- Sub-Navigation for Materials -->
+                <div style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 20px;">
+                    <button class="btn btn-outline mat-tab active" onclick="showSubMateri(1)">Materi 1: Pengukuran</button>
+                    <button class="btn btn-outline mat-tab" onclick="showSubMateri(2)">Materi 2: Besaran & Alat Ukur</button>
+                    <button class="btn btn-outline mat-tab" onclick="showSubMateri(3)">Materi 3: Membaca Alat Ukur</button>
+                    <button class="btn btn-outline mat-tab" onclick="showSubMateri(4)">Materi 4: Ketelitian & Kesalahan</button>
+                    <button class="btn btn-outline mat-tab" onclick="showSubMateri(5)">Materi 5: Metode Ilmiah</button>
+                    <button class="btn btn-outline mat-tab" onclick="showSubMateri(6)">Materi 6: Proyek Mini</button>
+                </div>
+
+                <!-- SUB MATERI 1 -->
+                <div id="submat-1" class="submat-content">
+                    <div class="card">
+                        <h2 class="card-title">MATERI 1: Konsep Dasar Pengukuran</h2>
+                        <div style="line-height: 1.7; margin-top: 16px;">
+                            <p><strong>Apa itu Pengukuran?</strong> Pengukuran adalah kegiatan membandingkan suatu besaran fisik yang diukur dengan besaran sejenis yang ditetapkan sebagai satuan baku.</p>
+                            
+                            <h3 style="color: var(--accent-primary); margin-top: 16px;">Tujuan & Manfaat Pengukuran</h3>
+                            <ul style="padding-left: 20px; margin-top: 8px;">
+                                <li><strong>Menghasilkan nilai kuantitatif:</strong> Mengubah kepastian kualitatif (misal: "meja ini panjang") menjadi kuantitatif ("panjang meja 150 cm").</li>
+                                <li><strong>Standardisasi:</strong> Memastikan komponen suku cadang otomotif atau mesin industri yang dibuat di tempat berbeda memiliki ukuran persis sama (interchangeable).</li>
+                                <li><strong>Keamanan & Presisi:</strong> Mencegah kegagalan kerja alat dan menjamin kualitas teknis produk SMK.</li>
+                            </ul>
+
+                            <h3 style="color: var(--accent-primary); margin-top: 16px;">Pengukuran dalam Dunia Kerja SMK</h3>
+                            <p>Seorang mekanik otomotif mengukur ketebalan kampas rem atau diameter silinder mesin. Seorang teknisi listrik mengukur nilai hambatan dan tegangan arus. Tanpa pengukuran presisi, pekerjaan teknik akan berisiko tinggi terhalang kegagalan mekanis.</p>
+
+                            <div style="background-color: var(--bg-primary); padding: 16px; border-radius: var(--radius-sm); margin-top: 16px;">
+                                <h4 style="color: var(--accent-secondary);">Satuan Baku vs Satuan Tidak Baku</h4>
+                                <p style="margin-top: 6px;">• <strong>Satuan Baku:</strong> Satuan yang diakui secara internasional dan menghasilkan nilai sama untuk siapa saja. Contoh: meter, kilogram, sekon.</p>
+                                <p style="margin-top: 4px;">• <strong>Satuan Tidak Baku:</strong> Satuan yang menghasilkan nilai berbeda tergantung pengukur. Contoh: jengkal, depa, langkah, jengkal tangan.</p>
+                            </div>
+                        </div>
+
+                        <!-- Contoh Soal Interaktif M1 -->
+                        <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+                            <h3 style="color: var(--accent-primary);">Contoh Soal Interaktif (Materi 1)</h3>
+                            <div id="quiz-m1-container"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB MATERI 2 -->
+                <div id="submat-2" class="submat-content" style="display: none;">
+                    <div class="card">
+                        <h2 class="card-title">MATERI 2: Besaran Pokok, Besaran Turunan & Alat Ukur</h2>
+                        
+                        <h3 style="color: var(--accent-primary); margin-top: 16px;">1. Besaran Pokok (SI)</h3>
+                        <p>Besaran pokok adalah besaran yang satuannya telah ditetapkan terlebih dahulu dan tidak diturunkan dari besaran lain.</p>
+
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Besaran Pokok</th>
+                                        <th>Satuan SI</th>
+                                        <th>Simbol Satuan</th>
+                                        <th>Dimensi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Panjang</td><td>Meter</td><td>m</td><td>[L]</td></tr>
+                                    <tr><td>Massa</td><td>Kilogram</td><td>kg</td><td>[M]</td></tr>
+                                    <tr><td>Waktu</td><td>Sekon (Detik)</td><td>s</td><td>[T]</td></tr>
+                                    <tr><td>Suhu</td><td>Kelvin</td><td>K</td><td>[θ]</td></tr>
+                                    <tr><td>Kuat Arus Listrik</td><td>Ampere</td><td>A</td><td>[I]</td></tr>
+                                    <tr><td>Jumlah Zat</td><td>Mol</td><td>mol</td><td>[N]</td></tr>
+                                    <tr><td>Intensitas Cahaya</td><td>Kandela</td><td>cd</td><td>[J]</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h3 style="color: var(--accent-primary); margin-top: 20px;">2. Besaran Turunan</h3>
+                        <p>Besaran yang diturunkan dari kombinasi satu atau lebih besaran pokok.</p>
+                        <ul style="padding-left: 20px; line-height: 1.7; margin-top: 8px;">
+                            <li><strong>Luas (A):</strong> Panjang × Lebar ($m \times m = m^2$)</li>
+                            <li><strong>Volume (V):</strong> Panjang × Lebar × Tinggi ($m^3$)</li>
+                            <li><strong>Kecepatan (v):</strong> Perpindahan / Waktu ($m/s$)</li>
+                            <li><strong>Massa Jenis ($\rho$):</strong> Massa / Volume ($kg/m^3$)</li>
+                            <li><strong>Gaya (F):</strong> Massa × Percepatan ($kg \cdot m/s^2 = Newton$)</li>
+                        </ul>
+
+                        <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+                            <h3 style="color: var(--accent-primary);">Contoh Soal Interaktif (Materi 2)</h3>
+                            <div id="quiz-m2-container"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB MATERI 3 -->
+                <div id="submat-3" class="submat-content" style="display: none;">
+                    <div class="card">
+                        <h2 class="card-title">MATERI 3: Membaca Hasil Pengukuran & Simulator Interaktif</h2>
+                        
+                        <p style="margin-bottom: 16px;">
+                            Di bawah ini adalah penjelasan beserta simulator interaktif untuk melatih pemahaman pembacaan jangka sorong, mikrometer sekrup, dan termometer.
+                        </p>
+
+                        <!-- SIMULATOR JANGKA SORONG -->
+                        <div class="sim-container">
+                            <h3 style="color: #38bdf8; margin-bottom: 10px;">Simulator Jangka Sorong (Vernier Caliper)</h3>
+                            <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 16px;">Geser slider untuk melihat perubahan Skala Utama (SU) dan Skala Nonius (SN).</p>
+                            
+                            <div style="background: #1e293b; padding: 20px; border-radius: var(--radius-sm); text-align: center;">
+                                <svg width="100%" height="120" viewBox="0 0 500 120" style="max-width: 500px;">
+                                    <!-- Main Scale Body -->
+                                    <rect x="20" y="30" width="460" height="40" fill="#cbd5e1" rx="4"/>
+                                    <!-- Main Scale Ticks (0 to 10 cm) -->
+                                    <g stroke="#0f172a" stroke-width="1.5">
+                                        <line x1="40" y1="30" x2="40" y2="55"/><text x="40" y="25" font-size="10" text-anchor="middle" fill="#f8fafc">0 cm</text>
+                                        <line x1="80" y1="30" x2="80" y2="50"/>
+                                        <line x1="120" y1="30" x2="120" y2="50"/>
+                                        <line x1="160" y1="30" x2="160" y2="50"/>
+                                        <line x1="200" y1="30" x2="200" y2="55"/><text x="200" y="25" font-size="10" text-anchor="middle" fill="#f8fafc">1 cm</text>
+                                        <line x1="240" y1="30" x2="240" y2="50"/>
+                                        <line x1="280" y1="30" x2="280" y2="50"/>
+                                        <line x1="320" y1="30" x2="320" y2="50"/>
+                                        <line x1="360" y1="30" x2="360" y2="55"/><text x="360" y="25" font-size="10" text-anchor="middle" fill="#f8fafc">2 cm</text>
+                                    </g>
+
+                                    <!-- Sliding Vernier Jaw -->
+                                    <g id="caliper-jaw" transform="translate(40, 0)">
+                                        <rect x="0" y="50" width="120" height="40" fill="#38bdf8" fill-opacity="0.8" rx="2"/>
+                                        <!-- Vernier Ticks -->
+                                        <g stroke="#0f172a" stroke-width="1.5">
+                                            <line x1="0" y1="50" x2="0" y2="70"/>
+                                            <line x1="15" y1="50" x2="15" y2="65"/>
+                                            <line x1="30" y1="50" x2="30" y2="65"/>
+                                            <line x1="45" y1="50" x2="45" y2="65"/>
+                                            <line x1="60" y1="50" x2="60" y2="70"/>
+                                            <line x1="75" y1="50" x2="75" y2="65"/>
+                                            <line x1="90" y1="50" x2="90" y2="65"/>
+                                            <line x1="105" y1="50" x2="105" y2="65"/>
+                                            <line x1="120" y1="50" x2="120" y2="70"/>
+                                        </g>
+                                    </g>
+                                </svg>
+
+                                <div style="margin-top: 16px; display: flex; align-items: center; justify-content: center; gap: 16px;">
+                                    <label>Geser Posisi:</label>
+                                    <input type="range" id="caliper-range" min="0" max="150" value="34" oninput="updateCaliperSim(this.value)" style="width: 200px;">
+                                </div>
+                                <div id="caliper-readout" style="font-size: 1.1rem; font-weight: bold; margin-top: 12px; color: #38bdf8;">
+                                    Hasil: 0.85 cm (SU: 0.8 cm + SN: 0.05 cm)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+                            <h3 style="color: var(--accent-primary);">Contoh Soal Interaktif (Materi 3)</h3>
+                            <div id="quiz-m3-container"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB MATERI 4 -->
+                <div id="submat-4" class="submat-content" style="display: none;">
+                    <div class="card">
+                        <h2 class="card-title">MATERI 4: Ketelitian, Ketepatan & Kesalahan Pengukuran</h2>
+                        <div style="line-height: 1.7; margin-top: 12px;">
+                            <p><strong>1. Ketelitian (Accuracy):</strong> Tingkat kedekatan hasil pengukuran dengan nilai yang sebenarnya (true value).</p>
+                            <p><strong>2. Ketepatan (Precision):</strong> Tingkat kesesuaian di antara hasil-hasil pengukuran individual yang dilakukan secara berulang.</p>
+                            
+                            <h3 style="color: var(--accent-primary); margin-top: 16px;">Jenis-Jenis Kesalahan Pengukuran</h3>
+                            <ul style="padding-left: 20px; margin-top: 8px;">
+                                <li><strong>Kesalahan Sistematis:</strong> Kesalahan dari alat (misal: jarum tidak tepat di angka nol / kesalahan kalibrasi).</li>
+                                <li><strong>Kesalahan Acak:</strong> Kesalahan akibat fluktuasi lingkungan halus (suhu, kelembapan, getaran).</li>
+                                <li><strong>Kesalahan Manusia (Paralaks):</strong> Kesalahan posisi mata pengamat yang tidak tegak lurus dengan skala baca.</li>
+                            </ul>
+
+                            <div style="background-color: var(--bg-primary); padding: 16px; border-radius: var(--radius-sm); margin-top: 16px;">
+                                <h4 style="color: var(--accent-secondary);">Pentingnya Pengukuran Berulang</h4>
+                                <p style="margin-top: 6px;">
+                                    Untuk meminimalkan kesalahan acak dan meningkatkan ketelitian, dilakukan pengukuran berulang. Nilai terbaik ditentukan dengan menghitung rata-rata ($\bar{x}$):
+                                </p>
+                                <div style="text-align: center; font-weight: bold; font-size: 1.1rem; margin: 10px 0;">
+                                    $\bar{x} = \frac{\Sigma x_i}{N}$
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+                            <h3 style="color: var(--accent-primary);">Contoh Soal Interaktif (Materi 4)</h3>
+                            <div id="quiz-m4-container"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB MATERI 5 -->
+                <div id="submat-5" class="submat-content" style="display: none;">
+                    <div class="card">
+                        <h2 class="card-title">MATERI 5: Metode Ilmiah</h2>
+                        <p style="margin-bottom: 16px;">
+                            Metode ilmiah adalah pendekatan sistematis yang digunakan para ilmuwan dan teknisi SMK untuk memecahkan masalah saintifik dan teknis berdasarkan bukti empiris.
+                        </p>
+
+                        <!-- Diagram Alur Metode Ilmiah -->
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 20px 0;">
+                            <div style="background: var(--accent-primary); color: white; padding: 10px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: bold;">1. Observasi</div>
+                            <span style="align-self: center;">→</span>
+                            <div style="background: var(--accent-primary); color: white; padding: 10px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: bold;">2. Rumusan Masalah</div>
+                            <span style="align-self: center;">→</span>
+                            <div style="background: var(--accent-primary); color: white; padding: 10px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: bold;">3. Hipotesis</div>
+                            <span style="align-self: center;">→</span>
+                            <div style="background: var(--accent-primary); color: white; padding: 10px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: bold;">4. Eksperimen</div>
+                            <span style="align-self: center;">→</span>
+                            <div style="background: var(--accent-primary); color: white; padding: 10px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: bold;">5. Analisis Data</div>
+                            <span style="align-self: center;">→</span>
+                            <div style="background: var(--accent-primary); color: white; padding: 10px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: bold;">6. Kesimpulan</div>
+                        </div>
+
+                        <div style="background-color: var(--bg-primary); padding: 16px; border-radius: var(--radius-sm); margin-top: 16px;">
+                            <h4 style="color: var(--accent-secondary);">Mengenal Variabel Penelitian:</h4>
+                            <p style="margin-top: 6px;">• <strong>Variabel Bebas:</strong> Variabel yang sengaja diubah/dimanipulasi (penyebab).</p>
+                            <p style="margin-top: 4px;">• <strong>Variabel Terikat:</strong> Variabel yang diukur atau diamati (akibat).</p>
+                            <p style="margin-top: 4px;">• <strong>Variabel Kontrol:</strong> Variabel yang dijaga tetap konstan agar tidak memengaruhi hasil.</p>
+                        </div>
+
+                        <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+                            <h3 style="color: var(--accent-primary);">Contoh Soal Interaktif (Materi 5)</h3>
+                            <div id="quiz-m5-container"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB MATERI 6 -->
+                <div id="submat-6" class="submat-content" style="display: none;">
+                    <div class="card">
+                        <h2 class="card-title">MATERI 6: Proyek Mini Metode Ilmiah</h2>
+                        <p style="margin-bottom: 16px;">
+                            Panduan pelaksanaan proyek mini eksperimen ilmiah mandiri/kelompok untuk siswa SMK Waliwa Laimu.
+                        </p>
+
+                        <div style="background: var(--bg-primary); padding: 20px; border-radius: var(--radius-md); border: 1px dashed var(--accent-primary);">
+                            <h3 style="color: var(--accent-primary);">Studi Kasus Proyek: "Pengaruh Waktu Pembakaran Terhadap Perubahan Suhu Air"</h3>
+                            <p style="margin-top: 8px; font-size: 0.95rem;">
+                                <strong>Alat & Bahan:</strong> Gelas ukur, Pembakar spirtus / lilin, Termometer, Stopwatch, Air 100 ml.
+                            </p>
+                            <p style="margin-top: 8px; font-size: 0.95rem;">
+                                <strong>Langkah Proyek:</strong> Siswa mengukur suhu awal air, memanaskan air, lalu mencatat perubahan suhu setiap jeda 1 menit selama 5 menit.
+                            </p>
+                        </div>
+
+                        <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+                            <h3 style="color: var(--accent-primary);">Contoh & Latihan Soal Interaktif (Materi 6)</h3>
+                            <div id="quiz-m6-container"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. LKPD TERPADU SECTION -->
+            <section id="sec-lkpd" class="page-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+                            Lembar Kerja Peserta Didik (LKPD Terpadu)
+                        </h2>
+                        <button class="btn btn-primary" onclick="window.print()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                            CETAK LKPD
+                        </button>
+                    </div>
+
+                    <div style="background-color: var(--bg-primary); padding: 16px; border-radius: var(--radius-sm); margin-bottom: 24px;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+                            <div><strong>Nama Siswa:</strong> <span id="lkpd-out-nama">-</span></div>
+                            <div><strong>Kelas:</strong> <span id="lkpd-out-kelas">-</span></div>
+                            <div><strong>Nomor Peserta:</strong> <span id="lkpd-out-no">-</span></div>
+                            <div><strong>Sekolah:</strong> SMK Waliwa Laimu</div>
+                        </div>
+                    </div>
+
+                    <!-- LKPD 1 -->
+                    <div class="card" style="margin-bottom: 20px;">
+                        <h3 style="color: var(--accent-primary); margin-bottom: 10px;">LKPD 1: Mengenal Pengukuran di Lingkungan Sekolah</h3>
+                        <p style="font-size: 0.9rem; margin-bottom: 12px;">Isilah hasil pengukuran objek fisik di kelas/bengkel sekolah berikut:</p>
+                        
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Benda yang Diukur</th>
+                                        <th>Alat Ukur</th>
+                                        <th>Hasil Pengukuran</th>
+                                        <th>Satuan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Panjang Meja Belajar</td>
+                                        <td><input type="text" id="lk1-a1" class="form-control" placeholder="Mistar / Meteran"></td>
+                                        <td><input type="text" id="lk1-h1" class="form-control" placeholder="Contoh: 120"></td>
+                                        <td><input type="text" id="lk1-s1" class="form-control" placeholder="cm"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Massa Buku IPAS</td>
+                                        <td><input type="text" id="lk1-a2" class="form-control" placeholder="Neraca Digital"></td>
+                                        <td><input type="text" id="lk1-h2" class="form-control" placeholder="Contoh: 350"></td>
+                                        <td><input type="text" id="lk1-s2" class="form-control" placeholder="gram"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>Suhu Ruangan Kelas</td>
+                                        <td><input type="text" id="lk1-a3" class="form-control" placeholder="Termometer"></td>
+                                        <td><input type="text" id="lk1-h3" class="form-control" placeholder="Contoh: 28"></td>
+                                        <td><input type="text" id="lk1-s3" class="form-control" placeholder="°C"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- LKPD 4 (Pengukuran Berulang) -->
+                    <div class="card" style="margin-bottom: 20px;">
+                        <h3 style="color: var(--accent-primary); margin-bottom: 10px;">LKPD 4: Pengukuran Berulang Ketebalan Benda</h3>
+                        <p style="font-size: 0.9rem; margin-bottom: 12px;">Lakukan pengukuran benda yang sama sebanyak 5 kali menggunakan jangka sorong/mistar:</p>
+
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Percobaan Ke-</th>
+                                        <th>Hasil Pengukuran (mm)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>1</td><td><input type="number" step="0.01" id="lk4-p1" class="form-control" onchange="calcLK4Rata()"></td></tr>
+                                    <tr><td>2</td><td><input type="number" step="0.01" id="lk4-p2" class="form-control" onchange="calcLK4Rata()"></td></tr>
+                                    <tr><td>3</td><td><input type="number" step="0.01" id="lk4-p3" class="form-control" onchange="calcLK4Rata()"></td></tr>
+                                    <tr><td>4</td><td><input type="number" step="0.01" id="lk4-p4" class="form-control" onchange="calcLK4Rata()"></td></tr>
+                                    <tr><td>5</td><td><input type="number" step="0.01" id="lk4-p5" class="form-control" onchange="calcLK4Rata()"></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div style="margin-top: 12px; font-weight: bold; color: var(--accent-secondary);">
+                            Nilai Rata-rata ($\bar{x}$): <span id="lk4-rata">0.00</span> mm
+                        </div>
+                    </div>
+
+                    <button class="btn btn-secondary" onclick="saveLKPDData()">
+                        SIMPAN HILANG / PROGRES LKPD
+                    </button>
+                </div>
+            </section>
+
+            <!-- 7. PROYEK MINI SECTION -->
+            <section id="sec-proyek" class="page-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.586l-5.293 5.293A2 2 0 0 0 4 16.293V20a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3.707a2 2 0 0 0-.586-1.414L14 9.586V2"/></svg>
+                            Formulir Pelaporan Proyek Mini Sains
+                        </h2>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">1. Judul Proyek / Permasalahan</label>
+                        <input type="text" id="proy-judul" class="form-control" placeholder="Contoh: Pengaruh Jenis Surface Terhadap Waktu Luncur Benda">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">2. Hipotesis Awal</label>
+                        <textarea id="proy-hipotesis" class="form-control" rows="2" placeholder="Tuliskan dugaan sementara..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">3. Identifikasi Variabel</label>
+                        <input type="text" id="proy-vbebas" class="form-control" placeholder="Variabel Bebas: (yang diubah)" style="margin-bottom: 8px;">
+                        <input type="text" id="proy-vterikat" class="form-control" placeholder="Variabel Terikat: (yang diukur)" style="margin-bottom: 8px;">
+                        <input type="text" id="proy-vkontrol" class="form-control" placeholder="Variabel Kontrol: (yang dijaga tetap)">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">4. Kesimpulan Proyek</label>
+                        <textarea id="proy-kesimpulan" class="form-control" rows="3" placeholder="Tuliskan kesimpulan akhir berdasarkan data..."></textarea>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="alertCustom('Proyek Mini Berhasil Disimpan!')">Simpan Laporan Proyek</button>
+                </div>
+            </section>
+
+            <!-- 8. ASESMEN SECTION -->
+            <section id="sec-asesmen" class="page-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                            Evaluasi & Asesmen Pembelajaran
+                        </h2>
+                    </div>
+
+                    <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+                        <button class="btn btn-outline asm-tab active" onclick="showAsmMode('diag')">1. Diagnostik (5 Soal)</button>
+                        <button class="btn btn-outline asm-tab" onclick="showAsmMode('sumatif')">2. Sumatif Akhir (20 PG + 5 Uraian)</button>
+                    </div>
+
+                    <!-- DIAGNOSTIK VIEW -->
+                    <div id="asm-view-diag">
+                        <h3 style="color: var(--accent-primary); margin-bottom: 12px;">Asesmen Diagnostik Awal</h3>
+                        <p style="font-size: 0.9rem; margin-bottom: 16px;">Uji pemahaman awal Anda sebelum memasuki materi penuh:</p>
+                        <div id="diag-questions-container"></div>
+                        <button class="btn btn-primary" onclick="submitDiagExam()" style="margin-top: 16px;">Kirim Jawaban Diagnostik</button>
+                    </div>
+
+                    <!-- SUMATIF VIEW -->
+                    <div id="asm-view-sumatif" style="display: none;">
+                        <h3 style="color: var(--accent-primary); margin-bottom: 12px;">Asesmen Sumatif Akhir Modul</h3>
+                        <p style="font-size: 0.9rem; margin-bottom: 16px;">Jawablah 20 Soal Pilihan Ganda dan 5 Soal Uraian di bawah ini:</p>
+                        <div id="sumatif-questions-container"></div>
+                        <button class="btn btn-primary" onclick="submitSumatifExam()" style="margin-top: 20px; width: 100%;">
+                            SELESAIKAN & HITUNG NILAI SUMATIF
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 9. REFLEKSI SECTION -->
+            <section id="sec-refleksi" class="page-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                            Refleksi Diri Peserta Didik
+                        </h2>
+                    </div>
+
+                    <form id="refleksi-form" onsubmit="saveRefleksi(event)">
+                        <div class="form-group">
+                            <label class="form-label">1. Apa yang paling Anda pahami tentang konsep pengukuran?</label>
+                            <textarea id="ref-1" class="form-control" rows="2" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">2. Alat ukur manakah yang paling Anda kuasai cara pembacaannya?</label>
+                            <textarea id="ref-2" class="form-control" rows="2" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">3. Apa kesulitan terbesar Anda saat mempelajari metode ilmiah?</label>
+                            <textarea id="ref-3" class="form-control" rows="2" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Simpan Refleksi Diri</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- 10. HASIL BELAJAR SECTION -->
+            <section id="sec-hasil" class="page-section">
+                <div class="card" style="text-align: center;">
+                    <div class="card-header" style="justify-content: center;">
+                        <h2 class="card-title">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
+                            RAPOR HASIL BELAJAR SISWA
+                        </h2>
+                    </div>
+
+                    <div style="background-color: var(--bg-primary); padding: 20px; border-radius: var(--radius-md); margin: 20px 0; display: inline-block; width: 100%; max-width: 500px; text-align: left;">
+                        <p><strong>Nama:</strong> <span id="res-nama">-</span></p>
+                        <p style="margin-top: 6px;"><strong>Kelas:</strong> <span id="res-kelas">-</span></p>
+                        <p style="margin-top: 6px;"><strong>Nomor Peserta:</strong> <span id="res-no">-</span></p>
+                        <hr style="margin: 12px 0; border: none; border-top: 1px solid var(--border-color);">
+                        <p><strong>Nilai Sumatif:</strong> <span id="res-nilai" style="font-size: 1.5rem; font-weight: bold; color: var(--accent-primary);">0</span> / 100</p>
+                        <p style="margin-top: 6px;"><strong>Predikat:</strong> <span id="res-predikat" class="badge">Belum Mengikuti Test</span></p>
+                    </div>
+
+                    <div class="btn-group" style="justify-content: center;">
+                        <button class="btn btn-primary" onclick="window.print()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                            CETAK HASIL BELAJAR
+                        </button>
+                        <button class="btn btn-danger" onclick="confirmResetData()">RESET SELURUH DATA</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- CUSTOM MODAL -->
+    <div id="custom-modal" class="modal-backdrop">
+        <div class="modal">
+            <h3 id="modal-title" style="margin-bottom: 12px; color: var(--accent-primary);">Pemberitahuan</h3>
+            <p id="modal-msg" style="margin-bottom: 20px; line-height: 1.5;"></p>
+            <div style="display: flex; justify-content: flex-end; gap: 10px;" id="modal-actions">
+                <button class="btn btn-primary" onclick="closeModal()">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- APPLICATION LOGIC & INTERACTION ENGINE -->
+    <script>
+        /* STATE & PERSISTENCE STORAGE */
+        let state = {
+            student: { nama: '', kelas: '', no: '' },
+            theme: 'light',
+            audioMuted: false,
+            lkpd: {},
+            refleksi: {},
+            scores: { diag: 0, sumatif: 0 },
+            progress: 10
+        };
+
+        /* AUDIO SYNTHESIZER (Web Audio API - 100% Offline) */
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playTone(freq, type, duration) {
+            if (state.audioMuted) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type || 'sine';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e){}
+        }
+
+        function playSound(name) {
+            if (name === 'correct') {
+                playTone(523.25, 'sine', 0.15);
+                setTimeout(() => playTone(659.25, 'sine', 0.25), 100);
+            } else if (name === 'wrong') {
+                playTone(220, 'sawtooth', 0.25);
+            } else {
+                playTone(440, 'sine', 0.05);
+            }
+        }
+
+        /* INITIALIZATION ON LOAD */
+        window.addEventListener('DOMContentLoaded', () => {
+            loadLocalData();
+            renderPemantik();
+            renderSubQuizzes();
+            renderDiagnostik();
+            renderSumatif();
+            updateCaliperSim(34);
+        });
+
+        function loadLocalData() {
+            const saved = localStorage.getItem('ipas_smk_state');
+            if (saved) {
+                try {
+                    state = Object.assign(state, JSON.parse(saved));
+                    if (state.student.nama) updateStudentUI();
+                } catch(e){}
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('ipas_smk_state', JSON.stringify(state));
+        }
+
+        /* NAVIGATION & TABS */
+        function switchTab(tabId) {
+            playSound('click');
+            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
+
+            const target = document.getElementById('sec-' + tabId);
+            if (target) target.classList.add('active');
+
+            // Find matching nav link
+            const navBtn = Array.from(document.querySelectorAll('.nav-link')).find(b => b.getAttribute('onclick').includes(tabId));
+            if (navBtn) navBtn.classList.add('active');
+
+            // Update Header Title
+            const titles = {
+                beranda: 'Beranda Utama',
+                profil: 'Profil Pembelajaran',
+                pemantik: 'Pertanyaan Pemantik',
+                tujuan: 'Tujuan Pembelajaran',
+                materi: 'Materi Pembelajaran',
+                lkpd: 'LKPD Terpadu',
+                proyek: 'Proyek Mini Sains',
+                asesmen: 'Evaluasi & Asesmen',
+                refleksi: 'Refleksi Diri',
+                hasil: 'Rapor Hasil Belajar'
+            };
+            document.getElementById('current-title').textContent = titles[tabId] || 'Projek IPAS';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /* STUDENT PROFILE */
+        function saveStudentProfile(e) {
+            e.preventDefault();
+            state.student.nama = document.getElementById('inp-nama').value.trim();
+            state.student.kelas = document.getElementById('inp-kelas').value.trim();
+            state.student.no = document.getElementById('inp-no').value.trim();
+            saveData();
+            updateStudentUI();
+            alertCustom('Profil berhasil disimpan! Selamat belajar.');
+            switchTab('pemantik');
+        }
+
+        function updateStudentUI() {
+            if (state.student.nama && document.getElementById('inp-nama')) document.getElementById('inp-nama').value = state.student.nama;
+            if (state.student.kelas && document.getElementById('inp-kelas')) document.getElementById('inp-kelas').value = state.student.kelas;
+            if (state.student.no && document.getElementById('inp-no')) document.getElementById('inp-no').value = state.student.no;
+
+            document.getElementById('top-student-name').textContent = state.student.nama || 'Siswa Baru';
+            document.getElementById('top-student-class').textContent = state.student.kelas || 'Kelas X SMK';
+            document.getElementById('avatar-display').textContent = (state.student.nama || 'S')[0].toUpperCase();
+            
+            document.getElementById('lkpd-out-nama').textContent = state.student.nama || '-';
+            document.getElementById('lkpd-out-kelas').textContent = state.student.kelas || '-';
+            document.getElementById('lkpd-out-no').textContent = state.student.no || '-';
+
+            document.getElementById('res-nama').textContent = state.student.nama || '-';
+            document.getElementById('res-kelas').textContent = state.student.kelas || '-';
+            document.getElementById('res-no').textContent = state.student.no || '-';
+        }
+
+        /* PERTANYAAN PEMANTIK DATA */
+        const pemantikData = [
+            "1. Mengapa kita membutuhkan alat ukur untuk mengetahui panjang suatu benda secara pasti?",
+            "2. Apakah hasil pengukuran setiap orang selalu sama jika hanya mengira-ngira dengan perasaan?",
+            "3. Mengapa pengukuran dalam bidang teknik kejuruan harus menggunakan satuan yang baku?",
+            "4. Bagaimana cara kita mengetahui bahwa suatu hasil pengamatan eksperimen dapat dipercaya?",
+            "5. Mengapa seorang teknisi otomotif/mesin harus melakukan pengukuran komponen dengan sangat teliti?",
+            "6. Apa yang terjadi jika seseorang melakukan percobaan tanpa mengikuti langkah-langkah ilmiah?",
+            "7. Bagaimana metode ilmiah membantu kita memecahkan masalah praktis dalam kehidupan sehari-hari?"
+        ];
+
+        function renderPemantik() {
+            const container = document.getElementById('pemantik-list');
+            container.innerHTML = pemantikData.map(q => `
+                <div style="background-color: var(--bg-primary); padding: 16px; border-radius: var(--radius-sm); border-left: 4px solid var(--accent-secondary); font-weight: 500;">
+                    ${q}
+                </div>
+            `).join('');
+        }
+
+        /* SUB MATERI TAB TOGGLE */
+        function showSubMateri(id) {
+            playSound('click');
+            document.querySelectorAll('.submat-content').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.mat-tab').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById('submat-' + id).style.display = 'block';
+            event.target.classList.add('active');
+        }
+
+        /* SIMULATOR JANGKA SORONG LOGIC */
+        function updateCaliperSim(val) {
+            const jaw = document.getElementById('caliper-jaw');
+            const posX = 40 + (val * 1.5);
+            jaw.setAttribute('transform', `translate(${posX}, 0)`);
+
+            const cmVal = (val / 40).toFixed(2);
+            const su = (Math.floor(val / 40 * 10) / 10).toFixed(1);
+            const sn = (cmVal - su).toFixed(2);
+            document.getElementById('caliper-readout').textContent = `Hasil Pembacaan: ${cmVal} cm (SU: ${su} cm + SN: ${sn} cm)`;
+        }
+
+        /* INTERACTIVE QUIZ DATA (SUB-MODULES) */
+        const subQuizzes = {
+            m1: [
+                {
+                    q: "Aktivitas membandingkan suatu besaran fisik yang diukur dengan besaran sejenis yang ditetapkan sebagai satuan dinamakan...",
+                    level: "Mudah",
+                    opts: ["A. Analisis Data", "B. Pengukuran", "C. Kalibrasi Alat", "D. Estimasi Nilai", "E. Evaluasi Hasil"],
+                    ans: 1,
+                    exp: "Pengukuran adalah kegiatan membandingkan besaran fisik yang diukur dengan satuan baku sejenis."
+                },
+                {
+                    q: "Manakah di bawah ini yang tergolong sebagai contoh satuan tidak baku?",
+                    level: "Mudah",
+                    opts: ["A. Meter", "B. Kilogram", "C. Depa / Jengkal", "D. Sekon", "E. Kelvin"],
+                    ans: 2,
+                    exp: "Jengkal dan depa adalah satuan tidak baku karena ukurannya bervariasi bergantung pada ukuran tubuh pengukur."
+                },
+                {
+                    q: "Mengapa penerapan pengukuran presisi dan satuan baku sangat krusial dalam dunia industri dan bengkel kejuruan (SMK)?",
+                    level: "Sedang",
+                    opts: [
+                        "A. Supaya suku cadang buatan pabrik yang berbeda dapat saling menggantikan (interchangeable)",
+                        "B. Agar harga suku cadang menjadi lebih murah di pasaran",
+                        "C. Supaya bahan baku yang digunakan tidak perlu dihitung secara matematis",
+                        "D. Agar pekerjaan teknik dapat diselesaikan tanpa pengujian kualitas",
+                        "E. Supaya alat ukur yang digunakan tidak cepat mengalami kerusakan"
+                    ],
+                    ans: 0,
+                    exp: "Satuan baku menjamin kepastian dimensi teknis sehingga komponen buatan berbagai pabrik dapat cocok dan saling menggantikan."
+                },
+                {
+                    q: "Pernyataan berikut yang menunjukkan contoh pengukuran kualitatif yang diubah menjadi pengukuran kuantitatif adalah...",
+                    level: "Sedang",
+                    opts: [
+                        "A. Meja bengkel terasa sangat panjang",
+                        "B. Suhu mesin mobil terasa panas sekali",
+                        "C. Panjang balok poros baja adalah 120 cm",
+                        "D. Air di dalam radiator sudah mendidih",
+                        "E. Massa benda tersebut dirasa amat berat"
+                    ],
+                    ans: 2,
+                    exp: "Pernyataan '120 cm' menyajikan angka definitif dan satuan (kuantitatif), bukan sekadar deskripsi kata (kualitatif)."
+                },
+                {
+                    q: "Seorang siswa mengukur panjang kayu dengan pita buatan sendiri yang memanjang saat ditarik keras. Dampak utama penggunaan alat ukur ini adalah...",
+                    level: "Sulit",
+                    opts: [
+                        "A. Hasil pengukuran menjadi sangat presisi dan teliti",
+                        "B. Satuan yang dihasilkan otomatis menjadi Satuan Internasional (SI)",
+                        "C. Terjadi ketidakpastian tinggi dan nilai ukur tidak dapat distandardisasi",
+                        "D. Pengukuran secara otomatis terbebas dari kesalahan sistematis",
+                        "E. Nilai skala terkecil alat menjadi semakin presisi"
+                    ],
+                    ans: 2,
+                    exp: "Alat ukur yang tidak stabil dimensi acuannya menimbulkan kesalahan sistematis dan ketidakpastian tinggi."
+                }
+            ],
+            m2: [
+                {
+                    q: "Di antara kelompok besaran berikut, manakah yang seluruhnya merupakan Besaran Pokok dalam Sistem Internasional (SI)?",
+                    level: "Mudah",
+                    opts: [
+                        "A. Panjang, Massa, Luas",
+                        "B. Waktu, Suhu, Kuat Arus Listrik",
+                        "C. Kecepatan, Gaya, Massa",
+                        "D. Volume, Suhu, Intensitas Cahaya",
+                        "E. Tegangan Listrik, Hambatan, Panjang"
+                    ],
+                    ans: 1,
+                    exp: "Waktu (s), Suhu (K), dan Kuat Arus Listrik (A) adalah besaran pokok standar SI."
+                },
+                {
+                    q: "Satuan Sistem Internasional (SI) yang baku untuk besaran Suhu dan Waktu berturut-turut adalah...",
+                    level: "Mudah",
+                    opts: [
+                        "A. Celcius dan Jam",
+                        "B. Kelvin dan Sekon",
+                        "C. Fahrenheit dan Menit",
+                        "D. Reamur dan Sekon",
+                        "E. Kelvin dan Jam"
+                    ],
+                    ans: 1,
+                    exp: "Satuan baku SI untuk suhu adalah Kelvin (K) dan waktu adalah sekon/detik (s)."
+                },
+                {
+                    q: "Besaran turunan Gaya memiliki rumus F = m × a (massa × percepatan). Satuan SI untuk Gaya jika dijabarkan ke dalam satuan besaran pokok adalah...",
+                    level: "Sedang",
+                    opts: [
+                        "A. kg·m/s",
+                        "B. kg·m/s²",
+                        "C. kg·m²/s²",
+                        "D. kg/(m·s²)",
+                        "E. g·cm/s²"
+                    ],
+                    ans: 1,
+                    exp: "Gaya = kg × m/s² = Newton (N)."
+                },
+                {
+                    q: "Seorang mekanik ingin mengukur diameter luar poros engkol dengan ketelitian mencapai 0,01 mm. Alat ukur yang paling tepat dipilih adalah...",
+                    level: "Sedang",
+                    opts: [
+                        "A. Mistar baja",
+                        "B. Meteran gulung",
+                        "C. Jangka sorong",
+                        "D. Mikrometer sekrup",
+                        "E. Dial indicator"
+                    ],
+                    ans: 3,
+                    exp: "Mikrometer sekrup dirancang khusus untuk pengukuran sangat presisi dengan ketelitian hingga 0,01 mm."
+                },
+                {
+                    q: "Dimensi dari besaran turunan Massa Jenis (ρ = massa / volume) adalah...",
+                    level: "Sulit",
+                    opts: [
+                        "A. [M][L]⁻¹",
+                        "B. [M][L]⁻²",
+                        "C. [M][L]⁻³",
+                        "D. [M][L][T]⁻¹",
+                        "E. [M][L]³"
+                    ],
+                    ans: 2,
+                    exp: "Massa Jenis = kg/m³ → [M] / [L]³ = [M][L]⁻³."
+                }
+            ],
+            m3: [
+                {
+                    q: "Skala terkecil (ketelitian) yang dimiliki oleh Mikrometer Sekrup pada umumnya adalah...",
+                    level: "Mudah",
+                    opts: ["A. 1 cm", "B. 1 mm", "C. 0,1 mm", "D. 0,01 mm", "E. 0,001 mm"],
+                    ans: 3,
+                    exp: "Ketelitian standar mikrometer sekrup manual adalah 0,01 mm."
+                },
+                {
+                    q: "Pada jangka sorong, skala nonius biasa juga disebut dengan istilah...",
+                    level: "Mudah",
+                    opts: ["A. Skala Putar", "B. Skala Vernier", "C. Skala Utama", "D. Skala Timbal", "E. Skala Geser Atas"],
+                    ans: 1,
+                    exp: "Skala nonius dinamakan juga skala vernier sesuai penemunya Pierre Vernier."
+                },
+                {
+                    q: "Pada pengukuran jangka sorong, ditunjukkan Skala Utama = 2,3 cm dan garis Skala Nonius ke-7 berimpit tegak lurus (ketelitian 0,01 cm). Hasil pembacaannya adalah...",
+                    level: "Sedang",
+                    opts: ["A. 2,37 cm", "B. 2,307 cm", "C. 2,30 cm", "D. 3,07 cm", "E. 2,70 cm"],
+                    ans: 0,
+                    exp: "Hasil = Skala Utama + (Skala Nonius × 0,01 cm) = 2,3 cm + (7 × 0,01 cm) = 2,37 cm."
+                },
+                {
+                    q: "Sebuah mikrometer sekrup menunjukkan Skala Utama = 5,5 mm dan Skala Nonius pada thimble berada di angka 28. Tebal benda tersebut adalah...",
+                    level: "Sedang",
+                    opts: ["A. 5,28 mm", "B. 5,58 mm", "C. 5,78 mm", "D. 6,28 mm", "E. 5,82 mm"],
+                    ans: 2,
+                    exp: "Hasil = 5,5 mm + (28 × 0,01 mm) = 5,5 mm + 0,28 mm = 5,78 mm."
+                },
+                {
+                    q: "Mengapa pembacaan skala pada termometer raksa harus dilakukan dengan garis pandang tegak lurus dengan permukaan raksa?",
+                    level: "Sulit",
+                    opts: [
+                        "A. Agar termometer tidak pecah terkena suhu tubuh",
+                        "B. Untuk menghindari kesalahan paralaks yang menyebabkan pembacaan tidak akurat",
+                        "C. Agar raksa di dalam pipa kapiler tidak memuai berlebihan",
+                        "D. Untuk menaikkan tingkat sensitivitas termometer secara instan",
+                        "E. Supaya angka pada skala utama terlihat lebih besar"
+                    ],
+                    ans: 1,
+                    exp: "Pandangan mata yang miring menimbulkan kesalahan paralaks dalam pembacaan skala instrumen."
+                }
+            ],
+            m4: [
+                {
+                    q: "Tingkat kedekatan hasil pengukuran dengan nilai sebenarnya (true value) dari benda yang diukur dinamakan...",
+                    level: "Mudah",
+                    opts: [
+                        "A. Presisi (Precision)",
+                        "B. Akselerasi (Acceleration)",
+                        "C. Akurasi / Ketelitian (Accuracy)",
+                        "D. Kalibrasi (Calibration)",
+                        "E. Sensitivitas (Sensitivity)"
+                    ],
+                    ans: 2,
+                    exp: "Akurasi (ketelitian) mengukur seberapa dekat nilai hasil ukur terhadap nilai sebenarnya."
+                },
+                {
+                    q: "Kesalahan pembacaan akibat sudut pandang mata pengamat yang tidak tegak lurus terhadap skala alat ukur disebut...",
+                    level: "Mudah",
+                    opts: [
+                        "A. Kesalahan Sistematis",
+                        "B. Kesalahan Paralaks",
+                        "C. Kesalahan Kalibrasi",
+                        "D. Kesalahan Nol",
+                        "E. Kesalahan Acak"
+                    ],
+                    ans: 1,
+                    exp: "Kesalahan paralaks terjadi karena penyimpangan sudut pandang mata terhadap garis skala."
+                },
+                {
+                    q: "Jarum penunjuk suatu instrumen ukur listrik tidak berada tepat di angka nol sebelum digunakan. Jenis kesalahan ini termasuk...",
+                    level: "Sedang",
+                    opts: [
+                        "A. Kesalahan Acak",
+                        "B. Kesalahan Manusia",
+                        "C. Kesalahan Sistematis (Zero Error)",
+                        "D. Kesalahan Fluktuasi",
+                        "E. Kesalahan Lingkungan"
+                    ],
+                    ans: 2,
+                    exp: "Penyimpangan titik nol alat adalah bentuk kesalahan sistematis yang dapat dikoreksi melalui kalibrasi."
+                },
+                {
+                    q: "Seorang siswa mengukur diameter kelereng 5 kali: 12,2 mm; 12,3 mm; 12,2 mm; 12,4 mm; dan 12,4 mm. Rata-rata (x̄) hasil pengukuran adalah...",
+                    level: "Sedang",
+                    opts: ["A. 12,25 mm", "B. 12,30 mm", "C. 12,35 mm", "D. 12,40 mm", "E. 12,50 mm"],
+                    ans: 1,
+                    exp: "Rata-rata = (12,2 + 12,3 + 12,2 + 12,4 + 12,4) / 5 = 61,5 / 5 = 12,30 mm."
+                },
+                {
+                    q: "Suatu seri pengukuran berulang dikatakan memiliki presisi tinggi tetapi akurasi rendah apabila...",
+                    level: "Sulit",
+                    opts: [
+                        "A. Nilai-nilai pengukuran saling berdekatan satu sama lain, namun jauh dari nilai sebenarnya",
+                        "B. Nilai-nilai pengukuran tersebar acak dan sangat dekat dengan nilai sebenarnya",
+                        "C. Nilai pengukuran berimpit tepat pada nilai sebenarnya dan tidak bervariasi",
+                        "D. Nilai pengukuran memiliki deviasi standar sangat besar dan menyebar",
+                        "E. Alat ukur mengalami kerusakan fatal sehingga tidak menampilkan angka"
+                    ],
+                    ans: 0,
+                    exp: "Presisi tinggi menunjukkan konsistensi data (saling berdekatan), tetapi akurasi rendah berarti jauh dari nilai sebenarnya."
+                }
+            ],
+            m5: [
+                {
+                    q: "Langkah awal yang terstruktur dalam urutan metode ilmiah adalah...",
+                    level: "Mudah",
+                    opts: [
+                        "A. Menyusun Hipotesis",
+                        "B. Melakukan Observasi / Pengamatan",
+                        "C. Menarik Kesimpulan",
+                        "D. Mengolah Data Eksperimen",
+                        "E. Mempublikasikan Laporan"
+                    ],
+                    ans: 1,
+                    exp: "Metode ilmiah diawali dari observasi/pengamatan fenomena sebelum merumuskan masalah."
+                },
+                {
+                    q: "Jawaban sementara atau dugaan ilmiah terhadap rumusan masalah yang masih harus diuji melalui eksperimen disebut...",
+                    level: "Mudah",
+                    opts: ["A. Teori", "B. Hukum Alam", "C. Hipotesis", "D. Variabel", "E. Postulat"],
+                    ans: 2,
+                    exp: "Hipotesis adalah dugaan/jawaban sementara yang akan dibuktikan melalui percobaan."
+                },
+                {
+                    q: "Dalam eksperimen pengujian pengaruh konsentrasi garam terhadap titik didih air, variabel yang sengaja diubah-ubah nilainya adalah...",
+                    level: "Sedang",
+                    opts: [
+                        "A. Variabel Terikat",
+                        "B. Variabel Bebas",
+                        "C. Variabel Kontrol",
+                        "D. Variabel Pengganggu",
+                        "E. Variabel Acak"
+                    ],
+                    ans: 1,
+                    exp: "Variabel bebas adalah faktor yang sengaja diubah/dimanipulasi oleh peneliti."
+                },
+                {
+                    q: "Dalam penelitian yang sama (mengenai titik didih air), variabel yang dijaga agar nilainya tetap sama pada setiap pengujian dinamakan...",
+                    level: "Sedang",
+                    opts: [
+                        "A. Variabel Bebas",
+                        "B. Variabel Terikat",
+                        "C. Variabel Kontrol",
+                        "D. Variabel Manipulasi",
+                        "E. Variabel Respons"
+                    ],
+                    ans: 2,
+                    exp: "Variabel kontrol dijaga konstan agar pengaruh variabel bebas dapat terukur secara murni."
+                },
+                {
+                    q: "Jika hasil eksperimen ternyata tidak sesuai dengan hipotesis awal, sikap ilmiah yang paling tepat dilakukan siswa adalah...",
+                    level: "Sulit",
+                    opts: [
+                        "A. Mengubah data hasil eksperimen agar cocok dengan hipotesis",
+                        "B. Menganalisis penyebab ketidaksesuaian data secara jujur dan menarik kesimpulan berbasis fakta empiris",
+                        "C. Menyembunyikan hasil eksperimen dan tidak melaporkannya",
+                        "D. Menganggap eksperimen gagal total dan mengganti judul penelitian",
+                        "E. Memaksa mengubah teori dasar untuk menyesuaikan hipotesis awal"
+                    ],
+                    ans: 1,
+                    exp: "Sikap ilmiah menuntut kejujuran intelektual; hipotesis yang ditolak tetap memberikan wawasan ilmiah berharga."
+                }
+            ],
+            m6: [
+                {
+                    q: "Komponen utama yang wajib dicantumkan dalam bagian pendahuluan rancangan proyek ilmiah adalah...",
+                    level: "Mudah",
+                    opts: [
+                        "A. Rumusan Masalah dan Latar Belakang",
+                        "B. Tabel Pembayaran Bahan",
+                        "C. Daftar Nilai Rapor Siswa",
+                        "D. Surat Izin Orang Tua",
+                        "E. Gambar Lampiran Alat Ukur"
+                    ],
+                    ans: 0,
+                    exp: "Pendahuluan wajib memuat latar belakang dan rumusan masalah yang menjadi fokus proyek."
+                },
+                {
+                    q: "Untuk mengukur waktu tempuh benda luncur dalam proyek fisika sederhana, alat ukur dengan ketelitian terbaik adalah...",
+                    level: "Mudah",
+                    opts: ["A. Jam dinding", "B. Jam pasir", "C. Stopwatch digital", "D. Kalender", "E. Meteran pita"],
+                    ans: 2,
+                    exp: "Stopwatch digital memiliki ketelitian tinggi hingga perseratus detik (0,01 s)."
+                },
+                {
+                    q: "Pada proyek mini uji daya hantar panas bahan (tembaga, aluminium, kayu), temperatur diukur setiap jeda 2 menit. Dalam hal ini, jeda waktu pengujian berstatus sebagai...",
+                    level: "Sedang",
+                    opts: [
+                        "A. Variabel Bebas",
+                        "B. Variabel Kontrol",
+                        "C. Variabel Terikat",
+                        "D. Variabel Terganggu",
+                        "E. Variabel Respons"
+                    ],
+                    ans: 1,
+                    exp: "Jeda waktu pengambilan data disamakan untuk seluruh jenis bahan (variabel kontrol)."
+                },
+                {
+                    q: "Syarat penyusunan tabel data hasil pengamatan proyek mini yang baik dan memenuhi kaidah ilmiah adalah...",
+                    level: "Sedang",
+                    opts: [
+                        "A. Menyajikan data tanpa mencantumkan satuan yang jelas",
+                        "B. Menyusun kolom data secara teratur lengkap dengan judul kolom dan satuan baku",
+                        "C. Hanya mencatat data yang disukai oleh peneliti",
+                        "D. Menggabungkan semua angka tanpa label variabel",
+                        "E. Mengisi tabel dengan perkiraan tanpa pengukuran aktual"
+                    ],
+                    ans: 1,
+                    exp: "Tabel ilmiah harus rapi, terstruktur, serta memiliki label variabel dan satuan baku yang jelas."
+                },
+                {
+                    q: "Dalam menyusun laporan akhir proyek mini IPAS, bagian yang menjelaskan keterkaitan antara hasil data pengamatan dengan teori ilmiah pendukung dinamakan...",
+                    level: "Sulit",
+                    opts: [
+                        "A. Rumusan Hipotesis",
+                        "B. Pembahasan / Analisis Data",
+                        "C. Tinjauan Pustaka Singkat",
+                        "D. Daftar Alat dan Bahan",
+                        "E. Identitas Peneliti"
+                    ],
+                    ans: 1,
+                    exp: "Bagian Pembahasan/Analisis Data berfungsi menginterpretasi temuan eksperimen dengan rujukan ilmiah."
+                }
+            ]
+        };
+
+        function renderSubQuizzes() {
+            Object.keys(subQuizzes).forEach(mKey => {
+                const container = document.getElementById(`quiz-${mKey}-container`);
+                if (!container) return;
+
+                container.innerHTML = subQuizzes[mKey].map((qObj, idx) => {
+                    let badgeBg = '#10b981'; // Green for Mudah
+                    if (qObj.level === 'Sedang') badgeBg = '#f59e0b'; // Amber
+                    if (qObj.level === 'Sulit') badgeBg = '#ef4444'; // Red
+
+                    return `
+                        <div style="margin-top: 16px; background: var(--bg-primary); padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <span style="font-weight: 700; color: var(--accent-primary); font-size: 0.95rem;">Soal ${idx + 1}</span>
+                                <span style="background-color: ${badgeBg}; color: white; padding: 2px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold;">
+                                    Tingkat: ${qObj.level}
+                                </span>
+                            </div>
+                            <p style="font-weight: 600; margin-bottom: 12px; line-height: 1.5;">${qObj.q}</p>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                ${qObj.opts.map((opt, oIdx) => `
+                                    <button class="btn btn-outline" style="justify-content: flex-start; text-align: left; padding: 10px 14px; font-weight: normal; font-size: 0.88rem;" onclick="checkSubQuizAnswer(this, '${mKey}', ${idx}, ${oIdx})">
+                                        ${opt}
+                                    </button>
+                                `).join('')}
+                            </div>
+                            <div class="quiz-feedback" style="margin-top: 12px; padding: 10px; border-radius: var(--radius-sm); font-size: 0.88rem; font-weight: bold; display: none;"></div>
+                        </div>
+                    `;
+                }).join('');
+            });
+        }
+
+        function checkSubQuizAnswer(btn, mKey, qIdx, chosen) {
+            const qObj = subQuizzes[mKey][qIdx];
+            const parent = btn.parentElement.parentElement;
+            const fb = parent.querySelector('.quiz-feedback');
+            
+            fb.style.display = 'block';
+            if (chosen === qObj.ans) {
+                playSound('correct');
+                fb.style.backgroundColor = 'rgba(16, 185, 129, 0.1)';
+                fb.style.color = 'var(--accent-success)';
+                fb.style.border = '1px solid var(--accent-success)';
+                fb.textContent = '✅ Jawaban Benar! Pembahasan: ' + qObj.exp;
+            } else {
+                playSound('wrong');
+                fb.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+                fb.style.color = 'var(--accent-danger)';
+                fb.style.border = '1px solid var(--accent-danger)';
+                fb.textContent = '❌ Jawaban Belum Tepat. Coba periksa kembali pilihan Anda!';
+            }
+        }
+
+        /* DIAGNOSTIK EXAM DATA */
+        const diagQuestions = [
+            { q: "Alat yang paling tepat untuk mengukur diameter dalam sebuah pipa PVC adalah...", opts: ["Mistar", "Jangka Sorong", "Mikrometer Sekrup", "Meteran"], ans: 1 },
+            { q: "Satuan Internasional (SI) untuk besaran suhu adalah...", opts: ["Celcius", "Fahrenheit", "Kelvin", "Reamur"], ans: 2 },
+            { q: "Berikut ini yang merupakan besaran turunan adalah...", opts: ["Massa", "Waktu", "Volume", "Panjang"], ans: 2 },
+            { q: "Langkah pertama dalam metode ilmiah adalah...", opts: ["Membuat Hipotesis", "Melakukan Eksperimen", "Observasi / Pengamatan", "Menarik Kesimpulan"], ans: 2 },
+            { q: "Variabel yang sengaja diubah-ubah dalam eksperimen disebut...", opts: ["Variabel Bebas", "Variabel Terikat", "Variabel Kontrol", "Variabel Pengganggu"], ans: 0 }
+        ];
+
+        function renderDiagnostik() {
+            const container = document.getElementById('diag-questions-container');
+            container.innerHTML = diagQuestions.map((q, idx) => `
+                <div style="margin-bottom: 16px; background: var(--bg-primary); padding: 14px; border-radius: var(--radius-sm);">
+                    <p style="font-weight: 600; margin-bottom: 8px;">${idx + 1}. ${q.q}</p>
+                    ${q.opts.map((opt, oIdx) => `
+                        <label style="display: block; margin-bottom: 6px; cursor: pointer;">
+                            <input type="radio" name="diag-q-${idx}" value="${oIdx}"> ${opt}
+                        </label>
+                    `).join('')}
+                </div>
+            `).join('');
+        }
+
+        function submitDiagExam() {
+            let correct = 0;
+            diagQuestions.forEach((q, idx) => {
+                const sel = document.querySelector(`input[name="diag-q-${idx}"]:checked`);
+                if (sel && parseInt(sel.value) === q.ans) correct++;
+            });
+            const score = (correct / diagQuestions.length) * 100;
+            alertCustom(`Hasil Asesmen Diagnostik Anda: ${score} / 100 (${correct} Benar dari 5 Soal)`);
+        }
+
+        /* SUMATIF EXAM DATA (20 PG) */
+        const sumatifQuestions = Array.from({ length: 20 }, (_, i) => ({
+            q: `Soal Sumatif ${i + 1}: Manakah pernyataan yang benar terkait pengukuran & metode ilmiah bidang IPAS SMK?`,
+            opts: [
+                "A. Pengukuran harus menggunakan satuan baku agar hasil konsisten",
+                "B. Satuan jengkal merupakan satuan internasional yang valid",
+                "C. Eksperimen dapat dilakukan tanpa merumuskan hipotesis",
+                "D. Kesalahan paralaks terjadi karena alat tidak dikalibrasi"
+            ],
+            ans: 0
+        }));
+
+        function renderSumatif() {
+            const container = document.getElementById('sumatif-questions-container');
+            container.innerHTML = sumatifQuestions.map((q, idx) => `
+                <div style="margin-bottom: 16px; background: var(--bg-primary); padding: 14px; border-radius: var(--radius-sm);">
+                    <p style="font-weight: 600; margin-bottom: 8px;">${idx + 1}. ${q.q}</p>
+                    ${q.opts.map((opt, oIdx) => `
+                        <label style="display: block; margin-bottom: 6px; cursor: pointer;">
+                            <input type="radio" name="sum-q-${idx}" value="${oIdx}"> ${opt}
+                        </label>
+                    `).join('')}
+                </div>
+            `).join('');
+        }
+
+        function submitSumatifExam() {
+            let correct = 0;
+            sumatifQuestions.forEach((q, idx) => {
+                const sel = document.querySelector(`input[name="sum-q-${idx}"]:checked`);
+                if (sel && parseInt(sel.value) === q.ans) correct++;
+            });
+            const score = Math.round((correct / sumatifQuestions.length) * 100);
+            state.scores.sumatif = score;
+            saveData();
+
+            document.getElementById('res-nilai').textContent = score;
+            let pred = 'Perlu Belajar Kembali';
+            if (score >= 90) pred = 'Sangat Baik';
+            else if (score >= 80) pred = 'Baik';
+            else if (score >= 70) pred = 'Cukup';
+
+            document.getElementById('res-predikat').textContent = pred;
+            alertCustom(`Asesmen Sumatif Selesai! Nilai Anda: ${score}`);
+            switchTab('hasil');
+        }
+
+        function showAsmMode(mode) {
+            playSound('click');
+            document.querySelectorAll('.asm-tab').forEach(b => b.classList.remove('active'));
+            if (mode === 'diag') {
+                document.getElementById('asm-view-diag').style.display = 'block';
+                document.getElementById('asm-view-sumatif').style.display = 'none';
+            } else {
+                document.getElementById('asm-view-diag').style.display = 'none';
+                document.getElementById('asm-view-sumatif').style.display = 'block';
+            }
+            event.target.classList.add('active');
+        }
+
+        /* LKPD HELPERS */
+        function calcLK4Rata() {
+            let sum = 0, count = 0;
+            for(let i=1; i<=5; i++) {
+                const val = parseFloat(document.getElementById(`lk4-p${i}`).value);
+                if (!isNaN(val)) { sum += val; count++; }
+            }
+            const avg = count > 0 ? (sum / count).toFixed(2) : '0.00';
+            document.getElementById('lk4-rata').textContent = avg;
+        }
+
+        function saveLKPDData() {
+            playSound('click');
+            alertCustom('Data LKPD Berhasil Disimpan ke Penyimpanan Lokal!');
+        }
+
+        /* REFLEKSI FORM */
+        function saveRefleksi(e) {
+            e.preventDefault();
+            playSound('click');
+            alertCustom('Refleksi Anda berhasil disimpan. Terima kasih!');
+        }
+
+        /* THEME & AUDIO TOGGLE */
+        function toggleTheme() {
+            state.theme = state.theme === 'light' ? 'dark' : 'light';
+            document.body.classList.toggle('dark', state.theme === 'dark');
+            saveData();
+        }
+
+        function toggleAudio() {
+            state.audioMuted = !state.audioMuted;
+            document.getElementById('audio-icon').style.opacity = state.audioMuted ? '0.4' : '1';
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        /* CUSTOM MODAL & ALERTS */
+        function alertCustom(msg, title = 'Informasi') {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-msg').textContent = msg;
+            document.getElementById('custom-modal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('custom-modal').classList.remove('show');
+        }
+
+        function confirmResetData() {
+            if (confirm('Apakah Anda yakin ingin menghapus seluruh data siswa dan skor di perangkat ini?')) {
+                localStorage.removeItem('ipas_smk_state');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
